@@ -1,0 +1,65 @@
+section .bss
+length  resd 1
+width   resd 1
+height  resd 1
+flow    resd 1
+prod0   resd 1
+prod1   resd 1
+prod2   resd 1
+
+section .text
+extern io_get_dec, io_print_dec, io_newline
+global main
+main:
+    mov ebp, esp
+
+    call io_get_dec
+    mov [length], eax
+    call io_get_dec
+    mov [width], eax
+    call io_get_dec
+    mov [height], eax
+    call io_get_dec
+    mov [flow], eax
+
+    mov eax, [length]
+    mov ebx, [width]
+    mul ebx
+
+    mov ebx, eax
+    mov esi, edx
+
+    mov ecx, [height]
+
+    mov eax, ebx
+    mul ecx
+    mov [prod0], eax
+    mov ebx, edx
+
+    mov eax, esi
+    mul ecx
+
+    add eax, ebx
+    adc edx, 0
+
+    mov [prod1], eax
+    mov [prod2], edx
+
+    mov ecx, [flow]
+
+    xor edx, edx
+    mov eax, [prod2]
+    div ecx
+
+    mov eax, [prod1]
+    div ecx
+
+    mov eax, [prod0]
+    div ecx
+
+    mov edi, eax
+    call io_print_dec
+    call io_newline
+
+    xor eax, eax
+    ret
